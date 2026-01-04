@@ -31,7 +31,9 @@ Rules:
 2. Keep the description concise (50 characters or less)
 3. Use imperative mood (e.g., "add" not "added" or "adds")
 4. Do not end the description with a period
-5. If the commit message already follows conventional commits, return it as-is"""
+5. ALWAYS write the description in English, regardless of the input language
+6. If the input is in another language (Korean, Japanese, Chinese, etc.), translate it to English
+7. If the commit message already follows conventional commits, return it as-is"""
 
 LANGUAGES = {
     'en': 'English', 'ko': 'Korean', 'ja': 'Japanese', 'zh': 'Chinese',
