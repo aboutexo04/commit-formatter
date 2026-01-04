@@ -1,0 +1,61 @@
+name: 'Commit Message Formatter'
+description: 'Automatically format commit messages to follow Conventional Commits specification using AI'
+author: 'seoyeonmun'
+branding:
+  icon: 'git-commit'
+  color: 'blue'
+
+inputs:
+  openrouter-api-key:
+    description: 'OpenRouter API key for AI-powered commit message formatting'
+    required: true
+  model:
+    description: 'Model to use via OpenRouter (e.g., meta-llama/llama-3-8b-instruct, openai/gpt-4o-mini)'
+    required: false
+    default: 'meta-llama/llama-3-8b-instruct'
+  github-token:
+    description: 'GitHub token for pushing amended commits'
+    required: true
+  dry-run:
+    description: 'If true, only show what would be changed without actually modifying commits'
+    required: false
+    default: 'false'
+  language:
+    description: 'Language for commit messages (en, ko, ja, zh, etc.)'
+    required: false
+    default: 'en'
+  custom-prompt:
+    description: 'Custom prompt to append to the AI instruction'
+    required: false
+    default: ''
+
+outputs:
+  original-message:
+    description: 'The original commit message before formatting'
+  formatted-message:
+    description: 'The formatted commit message'
+  was-modified:
+    description: 'Whether the commit message was modified'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      shell: bash
+      run: pip install requests
+
+    - name: Run formatter
+      shell: bash
+      env:
+        OPENROUTER_API_KEY: ${{ inputs.openrouter-api-key }}
+        MODEL: ${{ inputs.model }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        DRY_RUN: ${{ inputs.dry-run }}
+        LANGUAGE: ${{ inputs.language }}
+        CUSTOM_PROMPT: ${{ inputs.custom-prompt }}
+      run: python ${{ github.action_path }}/formatter.py
